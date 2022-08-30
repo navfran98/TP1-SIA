@@ -64,6 +64,7 @@ class DFS:
 
 class Greedy:
     def __init__(self, fillzone):
+        self.fillzone = fillzone
         # Nodos visitados
         self.v = []
         # Nodos frontera
@@ -71,7 +72,7 @@ class Greedy:
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
 
-    def run(self,heuristic):
+    def run(self):
         for state in self.f:
             if state not in self.v:
                 if not state.is_finished():
@@ -85,7 +86,8 @@ class Greedy:
                             newState = copy.deepcopy(state)
                             newState.current_colour = i
                             newState.paint(i)
-                            aux = heuristic(i)
+                            # aux = newState.run_heuristic(i)
+                            aux = self.fillzone.run_heuristic(newState, i)
                             print(str(i) + " --> " + str(aux))
                             if aux <= h_min:
                                 h_min = aux
@@ -101,6 +103,7 @@ class Greedy:
 
 class A:
     def __init__(self, fillzone):
+        self.fillzone = fillzone
         # Nodos visitados
         self.v = []
         # Nodos frontera
@@ -134,7 +137,7 @@ class A:
                             newState.current_colour = i
                             newState.paint(i)
                             newState.moves_made += 1
-                            newState.heuristic = newState.heuristic1(i)
+                            newState.heuristic = self.fillzone.run_heuristic(newState, i)
                             # newState.cost_for_A = newState.moves_made + newState.heuristic1(i)
                             self.f.append(newState)
                     self.f.pop(self.f.index(state))
@@ -147,9 +150,10 @@ class A:
             state = self.get_min_from_f()
 
 
-f = FillZone(5, 6)
+f = FillZone(5, 6, 1)
 g = A(f)
 g.run()
+
 
 #t = [1,2,3]
 #t.insert(1, 42)

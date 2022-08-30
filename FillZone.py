@@ -98,15 +98,44 @@ class State:
         return (self.size*self.size) - self.painted
         
 class FillZone:
-    def __init__(self, size, colours):
+    def __init__(self, size, colours, heuristic):
         self.state = State(size, colours)
+        self.selected_heuristic = heuristic
 
     def get_state(self):
         return self.state
 
+    def run_heuristic(self, state, new_colour):
+        if self.selected_heuristic == 1:
+            return self.heuristic1(state, new_colour)
+        
+    def heuristic1(self, state, new_colour):
+        aux = []
+        for s in state.painted:
+            aux.append(s)
+        for coord in aux:
+            # Derecha
+            if ((coord.x+1) < state.size):
+                if Pair(coord.x+1, coord.y) not in aux and state.board[coord.x+1][coord.y] == new_colour:
+                    aux.append(Pair(coord.x+1, coord.y))
+            # Izquierda
+            if ((coord.x-1) > 0):
+                if Pair(coord.x-1, coord.y) not in aux and state.board[coord.x-1][coord.y] == new_colour:
+                    aux.append(Pair(coord.x-1, coord.y))
+            # Abajo
+            if ((coord.y+1) < state.size):
+                if Pair(coord.x, coord.y+1) not in aux and state.board[coord.x][coord.y+1] == new_colour:
+                    aux.append(Pair(coord.x, coord.y+1))
+            # Arriba
+            if ((coord.y-1) > 0):
+                if Pair(coord.x, coord.y-1) not in aux and state.board[coord.x][coord.y-1] == new_colour:
+                    aux.append(Pair(coord.x, coord.y-1))
+            return state.size*state.size - len(aux)
 
 
-f = FillZone(4, 6)
+
+
+# f = FillZone(4, 6)
 #print(f.state.board)
 #print(f.state.painted)
 #print(str(f.state.heuristic1(1)))
