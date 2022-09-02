@@ -73,13 +73,10 @@ class RouletteSelection:
         for i in range(1,len(population)):
             accumulated_aptitudes.append(relative_aptitudes[i] + accumulated_aptitudes[i-1])
         
-        print(population)
-        print(accumulated_aptitudes)
         for i in range(0,self.selection_size):
             rj = 1
             while rj == 1:
                 rj = rnd.random()
-            print(rj)
             for j in range (0,len(population)):
                 if accumulated_aptitudes[j] > rj:
                     selected_population.append(population[j])

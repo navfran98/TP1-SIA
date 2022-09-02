@@ -28,7 +28,7 @@ class Utils:
     #pm = 0.20 * (i*0.10)
     
     def bitMutation(bit, pm):
-        if pm > random.random(0,1):
+        if pm > random.random():
             if bit == 0:
                 bit = 1
             else:
