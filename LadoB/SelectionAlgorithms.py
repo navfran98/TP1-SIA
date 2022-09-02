@@ -46,7 +46,6 @@ class Elite:
                     aux += 1
                 else:
                     return selected_population
-
         return selected_population
 
 
@@ -83,8 +82,6 @@ class RouletteSelection:
                     selected_population.append(population[j])
                     break
         return selected_population
-            
-
 
 # To sort the list in place...
 # ut.sort(key=lambda x: x.count, reverse=True)

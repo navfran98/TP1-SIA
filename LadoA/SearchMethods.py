@@ -1,33 +1,49 @@
 import copy
 from FillZone import FillZone
 from FillZone import Pair
+from FillZone import Triple
 
 class IDDFS:
-    def __init__(self, fillzone):
+    def __init__(self, fillzone, limit):
         # Nodos visitados
         self.v = []
         # Nodos frontera
-        self.f = [Pair(fillzone.get_state(), 0)]
+        self.f = [Triple(fillzone.get_state(), 0, 0)]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
+        # Camino Solucion
+        self.path = []
+        # Limite
+        self.limit = limit
     
-    def run(self, limit):
-        for idx, pair in enumerate(self.f):
-            if pair.x not in self.v:
-                if not pair.x.is_finished() and pair.y < limit:
-                    print("Profundidad --> " + str(pair.y))
-                    print(pair.x.board)
-                    self.v.append(pair.x)
+    def build_path(self, last):
+        aux = last
+        while aux.z != 0:
+            self.path.insert(0, aux.x)
+            aux = self.f[aux.z]
+    
+    def run(self):
+        for idx, triple in enumerate(self.f):
+            if triple.x not in self.v:
+                if not triple.x.is_finished() and triple.y <= self.limit:
+                    print("Profundidad --> " + str(triple.y))
+                    print(triple.x.board)
+                    self.v.append(triple.x)
                     # Expando
                     for i in self.available_colours:
-                        if i != pair.x.current_colour:
-                            newState = copy.deepcopy(pair.x)
+                        if i != triple.x.current_colour:
+                            newState = copy.deepcopy(triple.x)
                             newState.current_colour = i
                             newState.paint(i)
-                            self.f.append(Pair(newState, pair.y+1))
-                    self.f.pop(0)
+                            self.f.append(Triple(newState, triple.y+1, idx))
                 else:
-                    print(pair.x.board)
+                    print(triple.x.board)
+                    if triple.y >= self.limit:
+                        print("PERDISTE")
+                        return
+                    self.build_path(triple)
+                    for i in self.path:
+                        print(str(i.current_colour) + " ")
                     print("FIN")
                     return
             else:
@@ -49,7 +65,6 @@ class BFS:
         while aux.y != 0:
             self.path.insert(0, aux.x)
             aux = self.f[aux.y]
-
     
     def run(self):
         for idx, pair in enumerate(self.f):
@@ -103,6 +118,7 @@ class DFS:
                 else:
                     self.f.pop(idx)
             else:
+                self.path.append(state)
                 print(state.board)
                 print("GANASTE")
                 return
@@ -116,6 +132,8 @@ class Greedy:
         self.f = [fillzone.get_state()]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
+        # Camino solucion
+        self.path = []
 
     def run(self):
         for state in self.f:
@@ -139,7 +157,9 @@ class Greedy:
                                 next_state = newState
                     print("El mejor es --> " + str(next_state))
                     self.f.append(next_state)
+                    self.path.append(state)
                 else:
+                    self.path.append(state)
                     print(state.board)
                     print("FIN")
                     return
@@ -155,6 +175,8 @@ class A:
         self.f = [fillzone.get_state()]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
+        # Camino solucion
+        self.path = []
     
     def get_min_from_f(self):
         min_state = self.f[0]
@@ -167,6 +189,7 @@ class A:
 
     def run(self):
         state = self.f[0]
+        self.path.append(state)
         # Estoy verificando dos veces is_finished pero porq no lo pense todavia
         while True:
             if state not in self.v:
@@ -193,8 +216,9 @@ class A:
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
             state = self.get_min_from_f()
+            self.path.append(state)
 
 
 f = FillZone(3, 6, 1)
-g = BFS(f)
+g = IDDFS(f, 6)
 g.run()
