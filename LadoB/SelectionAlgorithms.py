@@ -68,7 +68,7 @@ class RouletteSelection:
         #Populo el array de aptitudes relativas
         for i in range(0, len(population)):
             relative_aptitudes.append(self.objective_color.compare_colors(population[i])/total_aptitude)
-            
+        
         accumulated_aptitudes.append(relative_aptitudes[0])
         for i in range(1,len(population)):
             accumulated_aptitudes.append(relative_aptitudes[i] + accumulated_aptitudes[i-1])
@@ -77,11 +77,11 @@ class RouletteSelection:
             rj = 1
             while rj == 1:
                 rj = rnd.random()
+                
             for j in range (0,len(population)):
                 if accumulated_aptitudes[j] > rj:
                     selected_population.append(population[j])
                     break
-        
         return selected_population
             
 

@@ -14,24 +14,27 @@ class Color:
     def __repr__(self):
         return "(" + str(Utils.binaryToDecimal((self.red))) + ", " + str(Utils.binaryToDecimal((self.green))) + ", " + str(Utils.binaryToDecimal((self.blue))) + ")"
 
+    #función de aptitud
     def compare_colors(self, other):
         ret = abs(Utils.binaryToDecimal(self.red) -  Utils.binaryToDecimal(other.red))
         ret += abs(Utils.binaryToDecimal(self.green) -  Utils.binaryToDecimal(other.green))
         ret += abs(Utils.binaryToDecimal(self.blue) -  Utils.binaryToDecimal(other.blue))
-        return ret
+        if ret == 0:
+            return 2
+        return 1/ret
 
     def generate_random_color():
         return Color(random.randint(0,255), random.randint(0,255), random.randint(0,255))
     
     def get_worse_individual(idx1,idx2,population,objective):
-        if population[idx1].compare_colors(objective) > population[idx2].compare_colors(objective):
+        if population[idx1].compare_colors(objective) < population[idx2].compare_colors(objective):
             return population[idx2], idx2
         return population[idx1], idx1 
     
     def get_better_individual(idx1,idx2,population,objective):
-        if population[idx1].compare_colors(objective) < population[idx2].compare_colors(objective):
-            return population[idx2], idx2
-        return population[idx1], idx1 
+        if population[idx1].compare_colors(objective) > population[idx2].compare_colors(objective):
+            return population[idx1], idx1
+        return population[idx2], idx2 
     
     def get_best_individual(population,objective):
         best = population[0]

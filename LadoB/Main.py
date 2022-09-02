@@ -12,37 +12,46 @@ from MutationAlgorithms import MultigenMutation
 from CrossoverAlgorithms import UniformCrossover
 #from Color import Colors
 
-K = 5 # numero de selección
+def end_condition(selected_population,objective):
+    best_color, idx = Color.get_best_individual(selected_population,objective)
+    return objective.compare_colors(best_color) > 0.1
+
+
+
+K = 4 # numero de selección
 N = 20 # numero de población
 
 objective = Color(245,172,33) # Color objetivo
 print(objective)
 
 crossover = UniformCrossover(0.5)
-selection = ProbabilisticTourney(0.7,K,objective)
+#selection = ProbabilisticTourney(0.7,K,objective)
+selection = Elite(K,objective)
+#selection = RouletteSelection(K,objective)
 
 
-palette = []
+#print(crossover.cross(Color(0,0,0),Color(255,255,255)))
+
+population = []
 #genero mi población inicial
 for i in range(0,N):
-    palette.append(Color.generate_random_color())
+    population.append(Color.generate_random_color())
     
-population = palette
 
 mutation = MultigenMutation(population,0.01)
 
 
+
 ##Empieza loop hasta condicion de corte
 print(objective)
-
-for i in range(0, 100):
-    selected_population = selection.select(population)
-    population = crossover.get_new_crossed_population(selected_population)
-    #mutation.set_population(population)
-    #mutation.mutate_population()
-
 selected_population = selection.select(population)
-#population = crossover.get_new_crossed_population(selected_population)
+while(not end_condition(selected_population,objective)):
+    
+    population = crossover.get_new_crossed_population(selected_population)
+    mutation.set_population(population)
+    mutation.mutate_population()
+    selected_population = selection.select(population)
+
 print(selected_population)
 
 
