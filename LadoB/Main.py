@@ -14,7 +14,7 @@ from CrossoverAlgorithms import UniformCrossover
 
 def end_condition(selected_population,objective):
     best_color, idx = Color.get_best_individual(selected_population,objective)
-    return objective.compare_colors(best_color) > 0.1
+    return objective.compare_colors(best_color) > 0.2
 
 
 
@@ -26,8 +26,8 @@ print(objective)
 
 crossover = UniformCrossover(0.5)
 #selection = ProbabilisticTourney(0.7,K,objective)
-selection = Elite(K,objective)
-#selection = RouletteSelection(K,objective)
+#selection = Elite(K,objective)
+selection = RouletteSelection(K,objective)
 
 
 #print(crossover.cross(Color(0,0,0),Color(255,255,255)))

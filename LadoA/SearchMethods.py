@@ -1,32 +1,75 @@
 import copy
 from FillZone import FillZone
+from FillZone import Pair
+
+class IDDFS:
+    def __init__(self, fillzone):
+        # Nodos visitados
+        self.v = []
+        # Nodos frontera
+        self.f = [Pair(fillzone.get_state(), 0)]
+        # Array con la cantidad de colores disponible
+        self.available_colours = list(range(0, fillzone.state.colours))
+    
+    def run(self, limit):
+        for idx, pair in enumerate(self.f):
+            if pair.x not in self.v:
+                if not pair.x.is_finished() and pair.y < limit:
+                    print("Profundidad --> " + str(pair.y))
+                    print(pair.x.board)
+                    self.v.append(pair.x)
+                    # Expando
+                    for i in self.available_colours:
+                        if i != pair.x.current_colour:
+                            newState = copy.deepcopy(pair.x)
+                            newState.current_colour = i
+                            newState.paint(i)
+                            self.f.append(Pair(newState, pair.y+1))
+                    self.f.pop(0)
+                else:
+                    print(pair.x.board)
+                    print("FIN")
+                    return
+            else:
+                print("PASE POR UN ESTADO REPETIDO/VISITADO")
 
 class BFS:
     def __init__(self, fillzone):
         # Nodos visitados
         self.v = []
         # Nodos frontera
-        self.f = [fillzone.get_state()]
+        self.f = [Pair(fillzone.get_state(), 0)]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
+        # Camino solucion
+        self.path = []
+    
+    def build_path(self, last):
+        aux = last
+        while aux.y != 0:
+            self.path.insert(0, aux.x)
+            aux = self.f[aux.y]
+
     
     def run(self):
-        for state in self.f:
-            if state not in self.v:
-                if not state.is_finished():
-                    print("Area pintada con ---> " + str(state.current_colour))
-                    print(state.board)
-                    self.v.append(state)
+        for idx, pair in enumerate(self.f):
+            if pair.x not in self.v:
+                if not pair.x.is_finished():
+                    print("Area pintada con ---> " + str(pair.x.current_colour))
+                    print(pair.x.board)
+                    self.v.append(pair.x)
                     # Expando
                     for i in self.available_colours:
-                        if i != state.current_colour:
-                            newState = copy.deepcopy(state)
+                        if i != pair.x.current_colour:
+                            newState = copy.deepcopy(pair.x)
                             newState.current_colour = i
                             newState.paint(i)
-                            self.f.append(newState)
-                    self.f.pop(0)
+                            self.f.append(Pair(newState, idx))
                 else:
-                    print(state.board)
+                    print(pair.x.board)
+                    self.build_path(pair)
+                    for i in self.path:
+                        print(str(i.current_colour) + " ")
                     print("FIN")
                     return
             else:
@@ -40,7 +83,8 @@ class DFS:
         self.f = [fillzone.get_state()]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
-                
+        # Camino solucion
+        self.path = []
     
     def run(self):
         for idx, state in enumerate(self.f):
@@ -55,6 +99,7 @@ class DFS:
                             ns.current_colour = i
                             ns.paint(i)
                             self.f.insert(idx+1,ns)
+                    self.path.append(state)
                 else:
                     self.f.pop(idx)
             else:
@@ -150,11 +195,6 @@ class A:
             state = self.get_min_from_f()
 
 
-f = FillZone(5, 6, 1)
-g = A(f)
+f = FillZone(3, 6, 1)
+g = BFS(f)
 g.run()
-
-
-#t = [1,2,3]
-#t.insert(1, 42)
-#print(t)
