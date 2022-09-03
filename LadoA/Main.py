@@ -7,7 +7,6 @@ if len(sys.argv) == 5:
     colors = int(sys.argv[1])
     size = int(sys.argv[2])
     heuristic = int(sys.argv[3])
-    print(sys.argv[4])
     if sys.argv[4] == str(1):
         print("o")
         f = FillZone(size, colors, heuristic)

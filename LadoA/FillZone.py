@@ -59,12 +59,8 @@ class State:
         return str(self.current_colour)
 
     # Cantidad de casillas que me faltan pintar
-    def heuristic1(self, new_colour):
-        aux = []
-        for s in self.painted:
-            aux.append(s)
+    def add_to_paint(self,new_colour, aux: list[Pair]):
         for coord in aux:
-            # Derecha
             if ((coord.x+1) < self.size):
                 if Pair(coord.x+1, coord.y) not in aux and self.board[coord.x+1][coord.y] == new_colour:
                     aux.append(Pair(coord.x+1, coord.y))
@@ -80,7 +76,34 @@ class State:
             if ((coord.y-1) > 0):
                 if Pair(coord.x, coord.y-1) not in aux and self.board[coord.x][coord.y-1] == new_colour:
                     aux.append(Pair(coord.x, coord.y-1))
-            return self.size*self.size - len(aux)
+        return aux
+            
+    
+    def heuristic1(self, new_colour):
+        aux = []
+        for s in self.painted:
+            aux.append(s)
+        self.add_to_paint(new_colour,aux)
+        return self.size*self.size - len(aux)
+        
+    def heuristic2(self, new_colour):
+        aux = []
+        for s in self.painted:
+            aux.append(s)
+        self.add_to_paint(new_colour,aux)
+        colours_left_to_paint = []
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                if self.board[i][j] not in colours_left_to_paint and Pair(i,j) not in aux:
+                    colours_left_to_paint.append(self.board[i][j])
+        print("Colours left to paint:" + str(len(colours_left_to_paint)))
+        return len(colours_left_to_paint)
+        
+    
+                    
+                
+        
+        
 
     def paint(self, new_colour):
         for coord in self.painted:
@@ -123,8 +146,8 @@ class FillZone:
     def run_heuristic(self, state, new_colour):
         if self.selected_heuristic == 1:
             return self.heuristic1(state, new_colour)
-        # elif self.selected_heuristic == 2:
-        #     return self.heuristic2(state, new_colour)
+        elif self.selected_heuristic == 2:
+            return self.heuristic2(state, new_colour)
         
     def heuristic1(self, state, new_colour):
         aux = []
@@ -148,3 +171,16 @@ class FillZone:
                 if Pair(coord.x, coord.y-1) not in aux and state.board[coord.x][coord.y-1] == new_colour:
                     aux.append(Pair(coord.x, coord.y-1))
             return state.size*state.size - len(aux)
+        
+    def heuristic2(self,state, new_colour):
+        aux = []
+        for s in state.painted:
+            aux.append(s)
+        state.add_to_paint(new_colour,aux)
+        colours_left_to_paint = []
+        for i in range(len(state.board)):
+            for j in range(len(state.board)):
+                if state.board[i][j] not in colours_left_to_paint and Pair(i,j) not in aux:
+                    colours_left_to_paint.append(state.board[i][j])
+        print("Colours left to paint:" + str(len(colours_left_to_paint)))
+        return len(colours_left_to_paint)

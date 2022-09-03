@@ -1,5 +1,7 @@
 import copy
+from telnetlib import NOP
 import time
+import random
 from FillZone import FillZone, Pair, Triple
 
 
@@ -44,11 +46,10 @@ class IDDFS:
                     else:
                         print("--- GANASTE ---")
                     self.build_path(triple)
-                    # for i in self.path:
-                    #     print(str(i.current_colour) + " ")
                     print("Tiempo: %s seconds " % (time.time() - start_time))
                     print(f"Nodos visitados: {len(self.v)}")
                     print(f"Camino Solucion: {self.path}")
+                    print(f"Costo de la solucion: {len(self.path)}")
                     print("---------------")
                     return
             else:
@@ -95,6 +96,7 @@ class BFS:
                     print("Tiempo: %s seconds " % (time.time() - start_time))
                     print(f"Nodos visitados: {len(self.v)}")
                     print(f"Camino Solucion: {self.path}")
+                    print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
                     return
             else:
@@ -135,6 +137,7 @@ class DFS:
                 print("Tiempo: %s seconds " % (time.time() - start_time))
                 print(f"Nodos visitados: {len(self.v)}")
                 print(f"Camino Solucion: {self.path}")
+                print(f"Costo de la solucion: {len(self.path)} Movimientos")
                 print("---------------")
                 return
 
@@ -158,7 +161,7 @@ class Greedy:
                     print(state.board)
                     self.v.append(state)
                     # Expando teniendo en cuenta la heuristica
-                    h_min = state.size * state.size
+                    h_min = -1
                     next_state = -1
                     for i in self.available_colours:
                         if i != state.current_colour:
@@ -167,9 +170,10 @@ class Greedy:
                             newState.paint(i)
                             aux = self.fillzone.run_heuristic(newState, i)
                             # print(str(i) + " --> " + str(aux))
-                            if aux <= h_min:
-                                h_min = aux
-                                next_state = newState
+                            if aux <= h_min or h_min == -1:
+                                if newState not in self.v:
+                                    h_min = aux
+                                    next_state = newState
                     # print("El mejor es --> " + str(next_state))
                     self.f.append(next_state)
                     self.path.append(state)
@@ -180,6 +184,7 @@ class Greedy:
                     print("Tiempo: %s seconds " % (time.time() - start_time))
                     print(f"Nodos visitados: {len(self.v)}")
                     print(f"Camino Solucion: {self.path}")
+                    print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
                     return
             else:
@@ -200,10 +205,16 @@ class A:
     def get_min_from_f(self):
         min_state = self.f[0]
         for state in self.f:
+            if state not in self.v:
+                min_state = state
+                break
+        for state in self.f:
             # if state.cost_for_A < min_state.cost_for_A:
             diff = (state.moves_made + state.heuristic) - (min_state.moves_made + min_state.heuristic)
             if diff < 0 or (diff == 0 and state.heuristic < min_state.heuristic):
-                min_state = copy.deepcopy(state)
+                if state not in self.v:
+                    min_state = state
+        min_state = copy.deepcopy(min_state)
         return min_state 
 
     def run(self):
@@ -212,32 +223,34 @@ class A:
         self.path.append(state)
         # Estoy verificando dos veces is_finished pero porq no lo pense todavia
         while True:
-            if state not in self.v:
             # Expando y calculo su costo + heuristica y lo agrego a la frontera
-                if not state.is_finished():
-                    print(state.board)
-                    print(state.moves_made)
-                    self.v.append(state)
-                    next_state = -1
-                    for i in self.available_colours:
-                        if i != state.current_colour:
-                            newState = copy.deepcopy(state)
-                            newState.current_colour = i
-                            newState.paint(i)
-                            newState.moves_made += 1
-                            newState.heuristic = self.fillzone.run_heuristic(newState, i)
-                            # newState.cost_for_A = newState.moves_made + newState.heuristic1(i)
+            #if state not in self.v:
+            if not state.is_finished():
+                print(state.board)
+                print(state.moves_made)
+                self.v.append(state)
+                print("Agrego " + str(state.heuristic) + " a estados visitados")
+                for i in self.available_colours:
+                    if i != state.current_colour:
+                        newState = copy.deepcopy(state)
+                        newState.current_colour = i
+                        newState.paint(i)
+                        newState.moves_made += 1
+                        newState.heuristic = self.fillzone.run_heuristic(newState, i)
+                        # newState.cost_for_A = newState.moves_made + newState.heuristic1(i)
+                        if newState not in self.v:
                             self.f.append(newState)
-                    self.f.pop(self.f.index(state))
-                else:
-                    print(state.board)
-                    print("--- GANASTE ---")
-                    print("Tiempo: %s seconds" % (time.time() - start_time))
-                    print(f"Nodos visitados: {len(self.v)}")
-                    print(f"Camino Solucion: {self.path}")
-                    print("---------------")
-                    return
+                self.f.pop(self.f.index(state))
             else:
-                print("PASE POR UN ESTADO REPETIDO/VISITADO")
+                print(state.board)
+                print("--- GANASTE ---")
+                print("Tiempo: %s seconds" % (time.time() - start_time))
+                print(f"Nodos visitados: {len(self.v)}")
+                print(f"Camino Solucion: {self.path}")
+                print(f"Costo de la solucion: {len(self.path)} Movimientos")
+                print("---------------")
+                return
+            #else:
+            #   print("Estado repetido/visitado")
             state = self.get_min_from_f()
             self.path.append(state)

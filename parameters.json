@@ -1,0 +1,23 @@
+{
+    "K": 4,
+    "objective": {
+        "red": "(Integer) [0, 255] Valor RGB de rojo",
+        "green": "(Integer) [0, 255] Valor RGB de verde",
+        "blue": "(Integer) [0, 255] Valor RGB de azul"
+    },
+    "palette": [{
+        "color": {
+            "red": "(Integer) [0, 255] Valor RGB de rojo",
+            "green": "(Integer) [0, 255] Valor RGB de verde",
+            "blue": "(Integer) [0, 255] Valor RGB de azul"
+        }
+    }],
+    "selection": 
+        {
+            "name": "Probabilistic Tourney",
+            "threshold": "(Float) (0,1) Threshold de selección"
+        } | {
+            "name": "Roulette | Elite"
+        }
+     
+}
