@@ -123,6 +123,8 @@ class FillZone:
     def run_heuristic(self, state, new_colour):
         if self.selected_heuristic == 1:
             return self.heuristic1(state, new_colour)
+        # elif self.selected_heuristic == 2:
+        #     return self.heuristic2(state, new_colour)
         
     def heuristic1(self, state, new_colour):
         aux = []
@@ -146,18 +148,3 @@ class FillZone:
                 if Pair(coord.x, coord.y-1) not in aux and state.board[coord.x][coord.y-1] == new_colour:
                     aux.append(Pair(coord.x, coord.y-1))
             return state.size*state.size - len(aux)
-
-
-
-
-# f = FillZone(4, 6)
-#print(f.state.board)
-#print(f.state.painted)
-#print(str(f.state.heuristic1(1)))
-# x = -1
-# while x != 8:
-#    print("----------")
-#    print(f.state.board)
-#    print("Faltan pintar --> " + str(f.state.heuristic1(x)))
-#    x = int(input())
-#    f.state.paint(x)

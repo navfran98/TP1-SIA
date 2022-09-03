@@ -1,7 +1,7 @@
 import copy
-from FillZone import FillZone
-from FillZone import Pair
-from FillZone import Triple
+import time
+from FillZone import FillZone, Pair, Triple
+
 
 class IDDFS:
     def __init__(self, fillzone, limit):
@@ -23,6 +23,7 @@ class IDDFS:
             aux = self.f[aux.z]
     
     def run(self):
+        start_time = time.time()
         for idx, triple in enumerate(self.f):
             if triple.x not in self.v:
                 if not triple.x.is_finished() and triple.y <= self.limit:
@@ -39,12 +40,16 @@ class IDDFS:
                 else:
                     print(triple.x.board)
                     if triple.y >= self.limit:
-                        print("PERDISTE")
-                        return
+                        print("--- PERDISTE ---")
+                    else:
+                        print("--- GANASTE ---")
                     self.build_path(triple)
-                    for i in self.path:
-                        print(str(i.current_colour) + " ")
-                    print("FIN")
+                    # for i in self.path:
+                    #     print(str(i.current_colour) + " ")
+                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Camino Solucion: {self.path}")
+                    print("---------------")
                     return
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
@@ -67,6 +72,7 @@ class BFS:
             aux = self.f[aux.y]
     
     def run(self):
+        start_time = time.time()
         for idx, pair in enumerate(self.f):
             if pair.x not in self.v:
                 if not pair.x.is_finished():
@@ -85,7 +91,11 @@ class BFS:
                     self.build_path(pair)
                     for i in self.path:
                         print(str(i.current_colour) + " ")
-                    print("FIN")
+                    print("--- GANASTE ---")
+                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Camino Solucion: {self.path}")
+                    print("---------------")
                     return
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
@@ -102,6 +112,7 @@ class DFS:
         self.path = []
     
     def run(self):
+        start_time = time.time()
         for idx, state in enumerate(self.f):
             if not state.is_finished():
                 if state not in self.v:
@@ -120,7 +131,11 @@ class DFS:
             else:
                 self.path.append(state)
                 print(state.board)
-                print("GANASTE")
+                print("--- GANASTE ---")
+                print("Tiempo: %s seconds " % (time.time() - start_time))
+                print(f"Nodos visitados: {len(self.v)}")
+                print(f"Camino Solucion: {self.path}")
+                print("---------------")
                 return
 
 class Greedy:
@@ -136,6 +151,7 @@ class Greedy:
         self.path = []
 
     def run(self):
+        start_time = time.time()
         for state in self.f:
             if state not in self.v:
                 if not state.is_finished():
@@ -149,19 +165,22 @@ class Greedy:
                             newState = copy.deepcopy(state)
                             newState.current_colour = i
                             newState.paint(i)
-                            # aux = newState.run_heuristic(i)
                             aux = self.fillzone.run_heuristic(newState, i)
-                            print(str(i) + " --> " + str(aux))
+                            # print(str(i) + " --> " + str(aux))
                             if aux <= h_min:
                                 h_min = aux
                                 next_state = newState
-                    print("El mejor es --> " + str(next_state))
+                    # print("El mejor es --> " + str(next_state))
                     self.f.append(next_state)
                     self.path.append(state)
                 else:
                     self.path.append(state)
                     print(state.board)
-                    print("FIN")
+                    print("--- GANASTE ---")
+                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Camino Solucion: {self.path}")
+                    print("---------------")
                     return
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
@@ -188,6 +207,7 @@ class A:
         return min_state 
 
     def run(self):
+        start_time = time.time()
         state = self.f[0]
         self.path.append(state)
         # Estoy verificando dos veces is_finished pero porq no lo pense todavia
@@ -211,14 +231,13 @@ class A:
                     self.f.pop(self.f.index(state))
                 else:
                     print(state.board)
-                    print("FIN")
+                    print("--- GANASTE ---")
+                    print("Tiempo: %s seconds" % (time.time() - start_time))
+                    print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Camino Solucion: {self.path}")
+                    print("---------------")
                     return
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
             state = self.get_min_from_f()
             self.path.append(state)
-
-
-f = FillZone(3, 6, 1)
-g = IDDFS(f, 6)
-g.run()

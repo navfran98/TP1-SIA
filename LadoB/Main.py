@@ -22,7 +22,6 @@ K = 4 # numero de selección
 N = 20 # numero de población
 
 objective = Color(245,172,33) # Color objetivo
-print(objective)
 
 crossover = UniformCrossover(0.5)
 #selection = ProbabilisticTourney(0.7,K,objective)
@@ -37,7 +36,6 @@ population = []
 for i in range(0,N):
     population.append(Color.generate_random_color())
     
-
 mutation = MultigenMutation(population,0.01)
 
 
