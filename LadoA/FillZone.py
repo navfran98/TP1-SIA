@@ -48,6 +48,7 @@ class State:
         # Deberiamos agregar cantidad de mov hechos para llegar a este estado
         self.moves_made = 0
         self.heuristic = 0
+        self.path = []
     
     def __eq__(self, other):
         return set(self.painted) == set(other.painted) and self.current_colour == other.current_colour

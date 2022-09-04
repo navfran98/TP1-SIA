@@ -67,6 +67,7 @@ class BFS:
         self.available_colours = list(range(0, fillzone.state.colours))
         # Camino solucion
         self.path = []
+        
     
     def build_path(self, last):
         aux = last
@@ -88,21 +89,23 @@ class BFS:
                             newState = copy.deepcopy(pair.x)
                             newState.current_colour = i
                             newState.paint(i)
+                            newState.path.append(pair.x)
                             self.f.append(Pair(newState, idx))
                 else:
-                    print(pair.x.board)
-                    self.build_path(pair)
-                    for i in self.path:
-                        print(str(i.current_colour) + " ")
+                    pair.x.path.append(pair.x)
+                    print(pair.x.path)
+                    for i in pair.x.path:
+                        print(i.board)
+     
                     print("--- GANASTE ---")
                     t = (time.time() - start_time)
                     print("Tiempo: %s seconds" % t)
                     print(f"Nodos visitados: {len(self.v)}")
                     print(f"Nodos frontera: {len(self.f)}")
-                    print(f"Camino Solucion: {self.path}")
+                    print(f"Camino Solucion: {pair.x.path}")
                     print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
-                    return t, len(self.v),len(self.f), len(self.path)
+                    return t, len(self.v),len(self.f), len(pair.x.path)
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
 
@@ -264,3 +267,15 @@ class A:
             #   print("Estado repetido/visitado")
             state = self.get_min_from_f()
             self.path.append(state)
+            
+            
+            
+            
+    ##
+    ##
+    #    3 4 0 3 1   4 4 0 3 1   0 0 0 3 1
+    #    4 3 1 1 3   4 3 1 1 3   0 3 1 1 3 
+    #    1 2 2 1 3   1 2 2 1 3
+    #    0 1 3 3 2   0 1 3 3 2
+    ##   1 3 0 0 4   1 3 0 0 4
+    #
