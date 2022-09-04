@@ -54,60 +54,87 @@ class IDDFS:
                     print(f"Costo de la solucion: {len(self.path)}")
                     print("---------------")
                     return t, len(self.v),len(self.f), len(self.path)
-            else:
-                print("PASE POR UN ESTADO REPETIDO/VISITADO")
+    
 
 class BFS:
     def __init__(self, fillzone):
         # Nodos visitados
         self.v = []
         # Nodos frontera
-        self.f = [Pair(fillzone.get_state(), 0)]
+        # self.f = [Pair(fillzone.get_state(), 0)]
+        self.f = [fillzone.get_state()]
         # Array con la cantidad de colores disponible
         self.available_colours = list(range(0, fillzone.state.colours))
         # Camino solucion
         self.path = []
         
-    
-    def build_path(self, last):
-        aux = last
-        while aux.y != 0:
-            self.path.insert(0, aux.x)
-            aux = self.f[aux.y]
-    
+    # def build_path(self, last):
+    #     aux = last
+    #     while aux.y != 0:
+    #         self.path.insert(0, aux.x)
+    #         aux = self.f[aux.y]
     def run(self):
         start_time = time.time()
-        for idx, pair in enumerate(self.f):
-            if pair.x not in self.v:
-                if not pair.x.is_finished():
-                    print("Area pintada con ---> " + str(pair.x.current_colour))
-                    print(pair.x.board)
-                    self.v.append(pair.x)
+        for s in self.f:
+            if s not in self.v:
+                if not s.is_finished():
+                    # print("Area pintada con ---> " + str(pair.x.current_colour))
+                    # print(pair.x.board)
+                    self.v.append(s)
                     # Expando
                     for i in self.available_colours:
-                        if i != pair.x.current_colour:
-                            newState = copy.deepcopy(pair.x)
+                        if i != s.current_colour:
+                            newState = copy.deepcopy(s)
                             newState.current_colour = i
                             newState.paint(i)
-                            newState.path.append(pair.x)
-                            self.f.append(Pair(newState, idx))
+                            newState.path.append(s)
+                            self.f.append(newState)
                 else:
-                    pair.x.path.append(pair.x)
-                    print(pair.x.path)
-                    for i in pair.x.path:
-                        print(i.board)
-     
+                    s.path.append(s)
+                    # print(pair.x.path)
+                    # for i in pair.x.path:
+                    #     print(i.board)
                     print("--- GANASTE ---")
                     t = (time.time() - start_time)
                     print("Tiempo: %s seconds" % t)
                     print(f"Nodos visitados: {len(self.v)}")
                     print(f"Nodos frontera: {len(self.f)}")
-                    print(f"Camino Solucion: {pair.x.path}")
-                    print(f"Costo de la solucion: {len(self.path)} Movimientos")
+                    print(f"Camino Solucion: {s.path}")
+                    print(f"Costo de la solucion: {len(s.path)} Movimientos")
                     print("---------------")
-                    return t, len(self.v),len(self.f), len(pair.x.path)
-            else:
-                print("PASE POR UN ESTADO REPETIDO/VISITADO")
+                    return t, len(self.v),len(self.f), len(s.path)
+
+    # def run(self):
+    #     start_time = time.time()
+    #     for idx, pair in enumerate(self.f):
+    #         if pair.x not in self.v:
+    #             if not pair.x.is_finished():
+    #                 # print("Area pintada con ---> " + str(pair.x.current_colour))
+    #                 # print(pair.x.board)
+    #                 self.v.append(pair.x)
+    #                 # Expando
+    #                 for i in self.available_colours:
+    #                     if i != pair.x.current_colour:
+    #                         newState = copy.deepcopy(pair.x)
+    #                         newState.current_colour = i
+    #                         newState.paint(i)
+    #                         newState.path.append(pair.x)
+    #                         self.f.append(Pair(newState, idx))
+    #             else:
+    #                 pair.x.path.append(pair.x)
+    #                 # print(pair.x.path)
+    #                 # for i in pair.x.path:
+    #                 #     print(i.board)
+    #                 print("--- GANASTE ---")
+    #                 t = (time.time() - start_time)
+    #                 print("Tiempo: %s seconds" % t)
+    #                 print(f"Nodos visitados: {len(self.v)}")
+    #                 print(f"Nodos frontera: {len(self.f)}")
+    #                 print(f"Camino Solucion: {pair.x.path}")
+    #                 print(f"Costo de la solucion: {len(pair.x.path)} Movimientos")
+    #                 print("---------------")
+    #                 return t, len(self.v),len(self.f), len(pair.x.path)
+    
 
 class DFS:
     def __init__(self, fillzone):
@@ -177,7 +204,7 @@ class Greedy:
                             newState = copy.deepcopy(state)
                             newState.current_colour = i
                             newState.paint(i)
-                            aux = self.fillzone.run_heuristic(newState, i)
+                            aux = self.fillzone.run_heuristic(newState)
                             # print(str(i) + " --> " + str(aux))
                             if aux <= h_min or h_min == -1:
                                 if newState not in self.v:
@@ -198,8 +225,7 @@ class Greedy:
                     print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
                     return t, len(self.v),len(self.f), len(self.path)
-            else:
-                print("PASE POR UN ESTADO REPETIDO/VISITADO")
+   
 
 class A:
     def __init__(self, fillzone):
@@ -237,30 +263,32 @@ class A:
             # Expando y calculo su costo + heuristica y lo agrego a la frontera
             #if state not in self.v:
             if not state.is_finished():
-                print(state.board)
-                print(state.moves_made)
+                # print(state.board)
+                # print(state.moves_made)
                 self.v.append(state)
-                print("Agrego " + str(state.heuristic) + " a estados visitados")
+                # print("Agrego " + str(state.heuristic) + " a estados visitados")
                 for i in self.available_colours:
                     if i != state.current_colour:
                         newState = copy.deepcopy(state)
                         newState.current_colour = i
                         newState.paint(i)
                         newState.moves_made += 1
-                        newState.heuristic = self.fillzone.run_heuristic(newState, i)
+                        newState.path.append(state)
+                        newState.heuristic = self.fillzone.run_heuristic(newState)
                         # newState.cost_for_A = newState.moves_made + newState.heuristic1(i)
                         if newState not in self.v:
                             self.f.append(newState)
                 #self.f.pop(self.f.index(state))
             else:
-                print(state.board)
+                # print(state.board)
+                state.path.append(state)
                 print("--- GANASTE ---")
                 t = (time.time() - start_time)
                 print("Tiempo: %s seconds" % t)
                 print(f"Nodos visitados: {len(self.v)}")
                 print(f"Nodos frontera: {len(self.f)}")
-                print(f"Camino Solucion: {self.path}")
-                print(f"Costo de la solucion: {len(self.path)} Movimientos")
+                print(f"Camino Solucion: {state.path}")
+                print(f"Costo de la solucion: {len(state.path)} Movimientos")
                 print("---------------")
                 return t, len(self.v),len(self.f), len(self.path)
             #else:

@@ -1,5 +1,3 @@
-
-from telnetlib import NOP
 from FillZone import FillZone
 from SearchMethods import DFS,BFS,IDDFS,A,Greedy
 
