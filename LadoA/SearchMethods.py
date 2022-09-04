@@ -46,12 +46,14 @@ class IDDFS:
                     else:
                         print("--- GANASTE ---")
                     self.build_path(triple)
-                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    t = (time.time() - start_time)
+                    print("Tiempo: %s seconds" % t)
                     print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Nodos frontera: {len(self.f)}")
                     print(f"Camino Solucion: {self.path}")
                     print(f"Costo de la solucion: {len(self.path)}")
                     print("---------------")
-                    return
+                    return t, len(self.v),len(self.f), len(self.path)
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
 
@@ -93,12 +95,14 @@ class BFS:
                     for i in self.path:
                         print(str(i.current_colour) + " ")
                     print("--- GANASTE ---")
-                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    t = (time.time() - start_time)
+                    print("Tiempo: %s seconds" % t)
                     print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Nodos frontera: {len(self.f)}")
                     print(f"Camino Solucion: {self.path}")
                     print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
-                    return
+                    return t, len(self.v),len(self.f), len(self.path)
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
 
@@ -134,12 +138,14 @@ class DFS:
                 self.path.append(state)
                 print(state.board)
                 print("--- GANASTE ---")
-                print("Tiempo: %s seconds " % (time.time() - start_time))
+                t = (time.time() - start_time)
+                print("Tiempo: %s seconds" % t)
                 print(f"Nodos visitados: {len(self.v)}")
+                print(f"Nodos frontera: {len(self.f)}")
                 print(f"Camino Solucion: {self.path}")
                 print(f"Costo de la solucion: {len(self.path)} Movimientos")
                 print("---------------")
-                return
+                return t, len(self.v),len(self.f), len(self.path)
 
 class Greedy:
     def __init__(self, fillzone):
@@ -181,12 +187,14 @@ class Greedy:
                     self.path.append(state)
                     print(state.board)
                     print("--- GANASTE ---")
-                    print("Tiempo: %s seconds " % (time.time() - start_time))
+                    t = (time.time() - start_time)
+                    print("Tiempo: %s seconds" % t)
                     print(f"Nodos visitados: {len(self.v)}")
+                    print(f"Nodos frontera: {len(self.f)}")
                     print(f"Camino Solucion: {self.path}")
                     print(f"Costo de la solucion: {len(self.path)} Movimientos")
                     print("---------------")
-                    return
+                    return t, len(self.v),len(self.f), len(self.path)
             else:
                 print("PASE POR UN ESTADO REPETIDO/VISITADO")
 
@@ -240,16 +248,18 @@ class A:
                         # newState.cost_for_A = newState.moves_made + newState.heuristic1(i)
                         if newState not in self.v:
                             self.f.append(newState)
-                self.f.pop(self.f.index(state))
+                #self.f.pop(self.f.index(state))
             else:
                 print(state.board)
                 print("--- GANASTE ---")
-                print("Tiempo: %s seconds" % (time.time() - start_time))
+                t = (time.time() - start_time)
+                print("Tiempo: %s seconds" % t)
                 print(f"Nodos visitados: {len(self.v)}")
+                print(f"Nodos frontera: {len(self.f)}")
                 print(f"Camino Solucion: {self.path}")
                 print(f"Costo de la solucion: {len(self.path)} Movimientos")
                 print("---------------")
-                return
+                return t, len(self.v),len(self.f), len(self.path)
             #else:
             #   print("Estado repetido/visitado")
             state = self.get_min_from_f()
