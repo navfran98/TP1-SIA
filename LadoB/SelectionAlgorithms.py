@@ -19,7 +19,7 @@ class ProbabilisticTourney:
                 
             #Dado una probabilidad, me quedo con el mejor o el peor. 
 
-            if(rnd.random() > self.threshold): #El P debería ser tipo un define
+            if(rnd.random() > self.threshold):
                 selected_individual, idx = Color.get_worse_individual(idx1,idx2,population,self.objective_color)
             else:
                 selected_individual, idx = Color.get_better_individual(idx1,idx2,population,self.objective_color)

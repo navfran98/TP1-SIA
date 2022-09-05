@@ -55,16 +55,11 @@
         "red": 100,
         "green": 24,
         "blue": 41
-    },
-    {
-        "red": 48,
-        "green": 250,
-        "blue": 226
     }
     ],
     "selection": 
         {
             "name": "Probabilistic Tourney",
-            "threshold": 0.7
+            "threshold": 0.5
         }  
 }
