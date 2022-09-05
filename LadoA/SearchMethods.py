@@ -77,10 +77,10 @@ class BFS:
                             newState = copy.deepcopy(state)
                             newState.current_colour = i
                             newState.paint(i)
-                            newState.path.append(state)
+                            newState.path.append(state.current_colour)
                             self.f.append(newState)
                 else:
-                    state.path.append(state)
+                    state.path.append(state.current_colour)
                     print("--- GANASTE ---")
                     t = (time.time() - start_time)
                     print("Tiempo: %s seconds" % t)
@@ -113,12 +113,12 @@ class DFS:
                             ns = copy.deepcopy(state)
                             ns.current_colour = i
                             ns.paint(i)
-                            ns.path.append(state)
+                            ns.path.append(state.current_colour)
                             self.f.insert(idx+1,ns)
                 else:
                     self.f.pop(idx)
             else:
-                state.path.append(state)
+                state.path.append(state.current_colour)
                 print("--- GANASTE ---")
                 t = (time.time() - start_time)
                 print("Tiempo: %s seconds" % t)
@@ -145,6 +145,7 @@ class Greedy:
         for state in self.f:
             if state not in self.v:
                 if not state.is_finished():
+                    print(state.board)
                     self.v.append(state)
                     # Expando teniendo en cuenta la heuristica
                     h_min = -1
@@ -154,7 +155,7 @@ class Greedy:
                             newState = copy.deepcopy(state)
                             newState.current_colour = i
                             newState.paint(i)
-                            newState.path.append(state)
+                            newState.path.append(state.current_colour)
                             aux = self.fillzone.run_heuristic(newState)
                             if aux <= h_min or h_min == -1:
                                 if newState not in self.v:
@@ -162,7 +163,7 @@ class Greedy:
                                     next_state = newState
                     self.f.append(next_state)
                 else:
-                    state.path.append(state)
+                    state.path.append(state.current_colour)
                     print(state.board)
                     print("--- GANASTE ---")
                     t = (time.time() - start_time)
@@ -215,12 +216,12 @@ class A:
                         newState.current_colour = i
                         newState.paint(i)
                         newState.moves_made += 1
-                        newState.path.append(state)
+                        newState.path.append(state.current_colour)
                         newState.heuristic = self.fillzone.run_heuristic(newState)
                         if newState not in self.v:
                             self.f.append(newState)
             else:
-                state.path.append(state)
+                state.path.append(state.current_colour)
                 print("--- GANASTE ---")
                 t = (time.time() - start_time)
                 print("Tiempo: %s seconds" % t)
