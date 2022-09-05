@@ -145,7 +145,6 @@ class Greedy:
         for state in self.f:
             if state not in self.v:
                 if not state.is_finished():
-                    print(state.board)
                     self.v.append(state)
                     # Expando teniendo en cuenta la heuristica
                     h_min = -1
