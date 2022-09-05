@@ -9,7 +9,6 @@ class Color:
 
     def __str__(self):
         return "(" + str(Utils.binaryToDecimal((self.red))) + ", " + str(Utils.binaryToDecimal((self.green))) + ", " + str(Utils.binaryToDecimal((self.blue))) + ")"
-        #return "(" + Utils.binaryToDecimal(str(self.red)) + ", " + Utils.binaryToDecimal(str(self.green)) + ", " + Utils.binaryToDecimal(str(self.green)) + ")"
 
     def __repr__(self):
         return "(" + str(Utils.binaryToDecimal((self.red))) + ", " + str(Utils.binaryToDecimal((self.green))) + ", " + str(Utils.binaryToDecimal((self.blue))) + ")"
@@ -28,8 +27,8 @@ class Color:
     
     def get_worse_individual(idx1,idx2,population,objective):
         if population[idx1].compare_colors(objective) < population[idx2].compare_colors(objective):
-            return population[idx2], idx2
-        return population[idx1], idx1 
+            return population[idx1], idx1
+        return population[idx2], idx2 
     
     def get_better_individual(idx1,idx2,population,objective):
         if population[idx1].compare_colors(objective) > population[idx2].compare_colors(objective):
