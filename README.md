@@ -16,9 +16,9 @@
 1. Colors -> [4,8] Un numero entre 4 y 8 que representa la cantidad de colores distintos presentes en el juego.
 2. Size -> [3,10] El tamaño que va a tener el tablero, siendo de NxN.
 3. Heuristic -> [1,2,3] Determina que heurística se utilizara, donde:
-    1. (No accesible) 
-    2. (Accesible) 
-    3. (Accesible)
+    1. (No accesible) Cantidad de cuadrados que faltan pintar.
+    2. (Accesible) Cantidad de colores distintos que hay en el área no pintada del tablero.
+    3. (Accesible) Cantidad de colores distintos que son vecinos al área pintada del tablero.
 4. SearchMethod -> [1,2,3,4] Determina que método de búsqueda se utilizara, donde:
     1. BFS
     2. DFS
