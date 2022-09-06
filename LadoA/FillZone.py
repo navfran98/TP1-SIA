@@ -126,16 +126,15 @@ class FillZone:
         elif self.selected_heuristic == 3:
             return self.heuristic3(state)
         
-    def heuristic1(self, state):
+    def heuristic1(self, state: State):
         return state.size*state.size - len(state.painted)
         
-    def heuristic2(self,state):
+    def heuristic2(self,state: State):
         colours_left_to_paint = []
         for i in range(len(state.board)):
             for j in range(len(state.board)):
                 if state.board[i][j] not in colours_left_to_paint and Pair(i,j) not in state.painted:
-                    colours_left_to_paint.append(state.board[i][j])
-                    
+                    colours_left_to_paint.append(state.board[i][j])          
         return len(colours_left_to_paint)
     
     def heuristic3(self, state: State):
